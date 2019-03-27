@@ -1,32 +1,33 @@
-import javax.swing.text.html.HTMLDocument;
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingQueue;
 
 /**
  * Copyright (c) Anton on 21.03.2019.
  */
 public class Resolver implements PuzzleResolver {
-    static ArrayList <Integer> target = new ArrayList <>(Arrays.asList(1, 2, 3, 4, 0, 5, 6, 7));
-    static LinkedBlockingQueue puzzles = new LinkedBlockingQueue();
+    private static final ArrayList <Integer> target = new ArrayList <>(Arrays.asList(1, 2, 3, 4, 0, 5, 6, 7));
+    private LinkedBlockingQueue<Puzzle> puzzles = new LinkedBlockingQueue<>();
+    private ArrayList <Integer> res;
+    private boolean isResolved = false;
+    private HashSet<Integer> checkedPuzzles = new HashSet <>();
+
+    static ArrayList<Long> maxMemoryUsed = new ArrayList <>();
 
     @Override
     public int[] resolve(int[] start) {
-        return new int[0];
-    }
-
-    public static void main(String[] args) {
-        Resolver resolver = new Resolver();
-        ArrayList <Integer> input = new ArrayList <>(Arrays.asList(0, 1, 2, 3, 4, 5, 6, 7));
+        ArrayList <Integer> input = new ArrayList <>();
+        for (int aStart : start) input.add(aStart);
         Puzzle puzzle = initPuzzle(input);
         if (puzzle.compareToTarget(target)) {
-            System.out.println("FOUND");
-            System.exit(0);
+            return new int[0];
         }
         puzzles.add(puzzle);
-        while (!puzzles.isEmpty()) {
-            resolver.doPossibleMoves(puzzles);
+        while (!isResolved) {
+            doPossibleMoves(puzzles);
         }
+        int[] result = new int[res.size()];
+        for (int i = 0; i < res.size(); i++) result[i] = res.get(i);
+        return result;
     }
 
     private void doPossibleMoves(Queue <Puzzle> puzzles) {
@@ -35,10 +36,13 @@ public class Resolver implements PuzzleResolver {
             puzzle.findPossibleMoves();
             for (Move move : puzzle.getPossibleMoves()) {
                 Puzzle puzzleState = initPuzzle(move, puzzle);
+                if (checkedPuzzles.contains(puzzleState.hashCode()))continue;
                 if (puzzleState.compareToTarget(target)) {
-                    System.out.println(puzzleState.getMoveTo());
-                    System.exit(0);
+                    isResolved = true;
+                    res = puzzleState.getMoveTo();
+                    return;
                 }
+                checkedPuzzles.add(puzzleState.hashCode());
                 puzzleState.setPreviousMove(move);
                 puzzles.add(puzzleState);
             }
@@ -70,8 +74,6 @@ public class Resolver implements PuzzleResolver {
         puzzleState.initRules();
         return puzzleState;
     }
-
-
 }
 
 
