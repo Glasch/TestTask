@@ -11,10 +11,13 @@ public class Resolver implements PuzzleResolver {
     private boolean isResolved = false;
     private HashSet<Integer> checkedPuzzles = new HashSet <>();
 
-    static ArrayList<Long> maxMemoryUsed = new ArrayList <>();
-
     @Override
     public int[] resolve(int[] start) {
+        /* Алгоритм работает по принципу поиска в ширину,
+           Отфильтровывая не релевантные ходы назад и
+           запоминая сериальзованные в хэш-код уже пройденные
+           в процессе перебора состояния, чтобы исключить их проверку в следующем цикле.
+        */
         ArrayList <Integer> input = new ArrayList <>();
         for (int aStart : start) input.add(aStart);
         Puzzle puzzle = initPuzzle(input);
@@ -22,6 +25,10 @@ public class Resolver implements PuzzleResolver {
             return new int[0];
         }
         puzzles.add(puzzle);
+        /*
+           Далее делаются все возможные ходы, до тех пор
+           пока пазл не будет решен
+         */
         while (!isResolved) {
             doPossibleMoves(puzzles);
         }
@@ -38,6 +45,9 @@ public class Resolver implements PuzzleResolver {
                 Puzzle puzzleState = initPuzzle(move, puzzle);
                 if (checkedPuzzles.contains(puzzleState.hashCode()))continue;
                 if (puzzleState.compareToTarget(target)) {
+                    /*
+                    Пазл решен
+                     */
                     isResolved = true;
                     res = puzzleState.getMoveTo();
                     return;

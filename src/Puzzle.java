@@ -11,40 +11,14 @@ public class Puzzle {
     private ArrayList <Integer> movesTo = new ArrayList <>();
 
     void initRules() {
-        for (PuzzleElement puzzleElement : puzzleElements) {
-            switch (puzzleElements.indexOf(puzzleElement)) {
-                case 0: {
-                    puzzleElement.setElementsToMove(puzzleElements.get(1), puzzleElements.get(2));
-                    continue;
-                }
-                case 1: {
-                    puzzleElement.setElementsToMove(puzzleElements.get(0), puzzleElements.get(2), puzzleElements.get(3));
-                    continue;
-                }
-                case 2: {
-                    puzzleElement.setElementsToMove(puzzleElements.get(0), puzzleElements.get(1), puzzleElements.get(5));
-                    continue;
-                }
-                case 3: {
-                    puzzleElement.setElementsToMove(puzzleElements.get(1), puzzleElements.get(4), puzzleElements.get(6));
-                    continue;
-                }
-                case 4: {
-                    puzzleElement.setElementsToMove(puzzleElements.get(3), puzzleElements.get(5));
-                    continue;
-                }
-                case 5: {
-                    puzzleElement.setElementsToMove(puzzleElements.get(4), puzzleElements.get(2), puzzleElements.get(7));
-                    continue;
-                }
-                case 6: {
-                    puzzleElement.setElementsToMove(puzzleElements.get(3), puzzleElements.get(7));
-                    continue;
-                }
-                case 7:
-                    puzzleElement.setElementsToMove(puzzleElements.get(6), puzzleElements.get(5));
-            }
-        }
+        puzzleElements.get(0).setElementsToMove(puzzleElements.get(1), puzzleElements.get(2));
+        puzzleElements.get(1).setElementsToMove(puzzleElements.get(0), puzzleElements.get(2), puzzleElements.get(3));
+        puzzleElements.get(2).setElementsToMove(puzzleElements.get(0), puzzleElements.get(1), puzzleElements.get(5));
+        puzzleElements.get(3).setElementsToMove(puzzleElements.get(1), puzzleElements.get(4), puzzleElements.get(6));
+        puzzleElements.get(4).setElementsToMove(puzzleElements.get(3), puzzleElements.get(5));
+        puzzleElements.get(5).setElementsToMove(puzzleElements.get(4), puzzleElements.get(2), puzzleElements.get(7));
+        puzzleElements.get(6).setElementsToMove(puzzleElements.get(3), puzzleElements.get(7));
+        puzzleElements.get(7).setElementsToMove(puzzleElements.get(6), puzzleElements.get(5));
     }
 
     boolean compareToTarget(ArrayList <Integer> target) {
